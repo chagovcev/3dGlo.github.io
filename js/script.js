@@ -84,7 +84,6 @@ window.addEventListener('DOMContentLoaded', function(){
             popupBtn = document.querySelectorAll('.popup-btn'),
             width = document.documentElement.clientWidth;
 
-
             popupBtn.forEach((elem) => {
                 elem.addEventListener('click', () => {
                     popup.style.display = 'block';
@@ -265,4 +264,45 @@ window.addEventListener('DOMContentLoaded', function(){
     };
 
     slider();
+
+    // Our team
+
+    const commandPhoto = document.querySelectorAll('.command__photo');
+
+    for (let i = 0; i < commandPhoto.length; i++){
+        commandPhoto[i].addEventListener('mouseenter', (e)=> {
+            const target = event.target.src;
+            event.target.src = event.target.dataset.img;
+            if(event.target.src = event.target.dataset.img){                
+                commandPhoto[i].addEventListener('mouseleave', (e)=> {
+                    event.target.src = target;
+                });
+            } else {
+                return;
+            }
+        });
+        
+    }
+
+    //Calc block
+
+    const calcBlock = document.querySelector('.calc-block'),
+    inputsCalc = calcBlock.querySelectorAll('input');
+
+    for (let i = 0; i < inputsCalc.length; i++) {
+
+        inputsCalc[i].addEventListener('input', () => {
+            let reg = /\d/gi;
+            if (!reg.test(inputsCalc[i].value)) {
+                inputsCalc[i].value = '';
+            }
+        });       
+    }
+    
+
+  
+
+
+
+
 });
