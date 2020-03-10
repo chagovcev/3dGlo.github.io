@@ -299,10 +299,7 @@ window.addEventListener('DOMContentLoaded', function(){
         for (let i = 0; i < inputsCalc.length; i++) {
 
             inputsCalc[i].addEventListener('input', () => {
-                let reg = /\d/gi;
-                if (!reg.test(inputsCalc[i].value)) {
-                    inputsCalc[i].value = '';
-                }
+                inputsCalc[i].value = inputsCalc[i].value.replace(/\D/gi, '');
             });       
         }
 
@@ -353,6 +350,89 @@ window.addEventListener('DOMContentLoaded', function(){
 
     calc(100);
 
+    //send-ajax-form
 
+    const sendForm = () => {
+        const errorNessage = 'Что-то пошло не так...',
+            loadMessage = 'Загрузка',
+            successMessage = 'Спасибо мы скоро с вами свяжемся!';
+        
+        const form = document.querySelectorAll('form'),
+            allInputs = document.querySelectorAll('input');
+            
+
+        for(let i = 0; i < allInputs.length; i++){
+            if(allInputs[i].classList.contains('form-phone')){
+                allInputs[i].addEventListener('input', () => {
+
+                    allInputs[i].value = allInputs[i].value.replace(/[^\d+]/g, '');
+                });
+            }
+
+            if(allInputs[i].classList.contains('form-name') || 
+               allInputs[i].classList.contains('mess')){
+                allInputs[i].addEventListener('input', () => {
+
+                    allInputs[i].value = allInputs[i].value.replace(/[^А-Яа-яЁё\s]/g, '');
+
+                });                 
+               }
+        }
+        
+        const statusMessage = document.createElement('div');
+        statusMessage.style.cssText = 'font-size: 2rem';
+
+        for(let i = 0; i < form.length; i++){
+            form[i].addEventListener('submit', (event) => {
+                event.preventDefault();
+                form[i].appendChild(statusMessage);               
+                statusMessage.textContent = loadMessage;
+                const formData = new FormData(form[i]); // все что содержится в форме и имеет аттрибут name!!
+                let body = {};
+    
+                // for(let val of formData.entries()){
+                //     body[val[0]] = val[1];
+                // }
+    
+                formData.forEach((val, key) => {
+                    body[key] = val;
+                });  
+                postData(body, () => {
+                    statusMessage.textContent = successMessage;
+                    for(let i = 0; i < allInputs.length; i++){
+                        allInputs[i].value = '';
+                    }
+                }, (error) => {
+                    statusMessage.textContent = errorNessage;
+                    console.error(error);                    
+                });           
+            });
+        }        
+
+        const postData = (body, outputData, errorData) => {
+            const request = new XMLHttpRequest();
+            request.addEventListener('readystatechange', () => {               
+    
+                if(request.readyState !==4){
+                    return;
+                }
+    
+                if(request.status === 200){
+                    outputData();                    
+                } else {
+                    errorData(request.status);                    
+                }
+    
+            });
+
+            request.open('POST', './server.php');
+            request.setRequestHeader('Content-type', 'application/json');
+                        
+            request.send(JSON.stringify(body));
+        };
+
+    };
+
+    sendForm();
 
 });
