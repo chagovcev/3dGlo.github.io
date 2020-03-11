@@ -44,7 +44,7 @@ const sendForm = () => {
                 body[key] = val;
             });  
 
-            postData(formData)
+            postData(body)
                 .then((response) => {
                     if (response.status !== 200){
                         throw new Error('status network not 200');
