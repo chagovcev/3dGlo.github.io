@@ -32,7 +32,7 @@ const sendForm = () => {
         event.preventDefault();
 
         const formData = new FormData(form);
-        let body = {};        
+        let body = {};     
 
         form.appendChild(statusMessage);               
         statusMessage.textContent = loadMessage;
