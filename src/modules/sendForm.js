@@ -34,15 +34,15 @@ const sendForm = () => {
             form[i].appendChild(statusMessage);               
             statusMessage.textContent = loadMessage;
             const formData = new FormData(form[i]); // все что содержится в форме и имеет аттрибут name!!
-            // let body = {};
+            let body = {};
 
             // // for(let val of formData.entries()){
             // //     body[val[0]] = val[1];
             // // }
 
-            // formData.forEach((val, key) => {
-            //     body[key] = val;
-            // });  
+            formData.forEach((val, key) => {
+                body[key] = val;
+            });  
 
             postData(formData)
                 .then((response) => {
