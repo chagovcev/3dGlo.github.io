@@ -4,7 +4,7 @@ const sendForm = () => {
         loadMessage = 'Загрузка...',
         successMessage = 'Спасибо мы скоро с Вами свяжемся!';
 
-    const form = document.getElementById('form1'),
+    const form = document.querySelectorAll('form'),
         allInputs = document.querySelectorAll('input');
 
 
@@ -37,44 +37,47 @@ const sendForm = () => {
         body: JSON.stringify(formData)
     });
 
-    form.addEventListener('submit', (event) => {
-        event.preventDefault();
-
-        const formData = new FormData(form);
-        let body = {};
-
-        form.appendChild(statusMessage);
-        statusMessage.textContent = loadMessage;
-
-        formData.forEach((val, key) => {
-            body[key] = val;
-        });
-
-
-        postData(body)
-            .then(response => {
-                if (response.status !== 200) {
-                    throw new Error('status network not 200');
-                }
-                statusMessage.textContent = successMessage;
-                setTimeout(() => {
-                    statusMessage.textContent = '';
-                }, 5000);
-
-                for (let i = 0; i < allInputs.length; i++) {
-                    allInputs[i].value = '';
-                }
-
-                form.reset();
-            })
-            .catch(error => {
-                statusMessage.textContent = errorMessage;
-                setTimeout(() => {
-                    statusMessage.textContent = '';
-                }, 5000);
-                console.error(error);
+    for(let i =0; i < form.length; i++){
+        form[i].addEventListener('submit', (event) => {
+            event.preventDefault();
+    
+            const formData = new FormData(form[i]);
+            let body = {};
+    
+            form[i].appendChild(statusMessage);
+            statusMessage.textContent = loadMessage;
+    
+            formData.forEach((val, key) => {
+                body[key] = val;
             });
-        console.log('body: ', body);
-    });
+    
+    
+            postData(body)
+                .then(response => {
+                    if (response.status !== 200) {
+                        throw new Error('status network not 200');
+                    }
+                    statusMessage.textContent = successMessage;
+                    setTimeout(() => {
+                        statusMessage.textContent = '';
+                    }, 5000);
+    
+                    for (let i = 0; i < allInputs.length; i++) {
+                        allInputs[i].value = '';
+                    }
+    
+                    form[i].reset();
+                })
+                .catch(error => {
+                    statusMessage.textContent = errorMessage;
+                    setTimeout(() => {
+                        statusMessage.textContent = '';
+                    }, 5000);
+                    console.error(error);
+                });
+            console.log('body: ', body);
+        });
+    }
+    
 };
 export default sendForm;
